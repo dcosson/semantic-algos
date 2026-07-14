@@ -1,6 +1,6 @@
 ---
 name: analogy-transfer
-description: Solve a problem by systematically importing solutions from other domains: abstract the problem's deep structure, find 3–5 domains that share that structure, study how each solved it, and translate the mechanisms back — with an explicit disanalogy check. Use for "how do other fields handle this?" and stuck problems that feel like they must have been solved somewhere before.
+description: "Solve a problem by systematically importing solutions from other domains: abstract the problem's deep structure, find 3–5 domains that share that structure, study how each solved it, and translate the mechanisms back — with an explicit disanalogy check. Use for 'how do other fields handle this?' and stuck problems that feel like they must have been solved somewhere before."
 compatibility: Created for Zo Computer
 metadata:
   author: rob.zo.computer

@@ -1,6 +1,6 @@
 ---
 name: decision-matrix
-description: Structure a choice between concrete options: elicit the real criteria and their weights, score each option honestly, run a sensitivity check on the weights, and separate what the numbers say from what the gut says. Use when choosing between 2–6 named alternatives (jobs, tools, vendors, apartments, strategies).
+description: "Structure a choice between concrete options: elicit the real criteria and their weights, score each option honestly, run a sensitivity check on the weights, and separate what the numbers say from what the gut says. Use when choosing between 2–6 named alternatives (jobs, tools, vendors, apartments, strategies)."
 compatibility: Created for Zo Computer
 metadata:
   author: rob.zo.computer
