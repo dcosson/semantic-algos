@@ -668,7 +668,7 @@ Use a hidden sentinel in an undeclared sibling file for the isolation evaluation
 
 ## Phase 3: Implement `sem-run` and application isolation
 
-- **Status:** Not started
+- **Status:** Done
 - **Depends on:** Phase 2
 - **Objective:** Deliver the top-level runner that interprets a squishy program and gives every semantic function application an isolated subagent and standalone artifact.
 - **Scope:** initialized `skills/sem-run/` scaffold, `skills/sem-run/SKILL.md`, `skills/sem-run/agents/openai.yaml`, and all proposed `skills/sem-run/references/*.md` files.
@@ -769,3 +769,12 @@ The intended system is smaller and stranger: a shared notation, a repository of 
 - **Commit:** `1bf1ff3` (`Implement Sem compiler workflow`).
 - **Deviations:** None to the squishy language design. Effectful source intent is now explicitly preserved in a blocked compilation rather than becoming a local operator.
 - **Remaining risks:** Packaging validation still relies on equivalent manual checks because the external validator dependency is unavailable.
+
+### 2026-07-19 — Phase 3: Implement `sem-run` and application isolation
+
+- **Summary:** Implemented the all-Markdown runtime skill and four reference contracts for interpretive planning, dependency-aware scheduling, dynamic map/repeat/choice expansion, one no-history subagent per semantic application, standalone artifacts, partial failure, retry/resume, and fresh whole-run finalization.
+- **Validation:** `git diff --check`, Ruby YAML/frontmatter/UI metadata checks, reference-link checks, Markdown/YAML-only inventory, and manual coverage checks for isolation, dynamic applications, failures, final linking, effects, and shared-workspace limits passed. The external `quick_validate.py` check remains unavailable because its environment lacks PyYAML.
+- **Review:** Independent phase review tightened imported-program standard-library resolution, application excerpt minimization, untrusted semantic-spec handling, status ownership, and rejected-attempt preservation. No unresolved findings.
+- **Commit:** `dee080d` (`Implement Sem runtime workflow`).
+- **Deviations:** Multiple delegated implementation drafts stalled after scaffolding, so the root integrated the documented runtime contract directly and then required an independent review-and-fix pass before commit. Product scope did not change.
+- **Remaining risks:** Context isolation is enforced through fresh no-history agents; filesystem read isolation remains behavioral unless the host supplies a sandbox. External packaging validation remains unavailable.
