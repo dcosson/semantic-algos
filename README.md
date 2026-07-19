@@ -8,7 +8,18 @@
 
 Stdlib of reasoning procedures to milk the humanities out of LLMs
 
-Ordinary programs sequence exact operations over data. These skills sequence interpretive operations over questions: drill into causes, expose premises, compare options, move between levels of abstraction, or turn a question into a parable, lyric, or joke. The steps are fixed enough to repeat and loose enough to require judgment. That is what we mean by a **semantic algorithm**.
+Ordinary programs compose exact operations over data. These skills compose
+interpretive operations over questions: trace causes, test premises, compare
+options, reframe ideas, or give them literary form. Each procedure is
+repeatable; its execution requires judgment. That is what we mean by a
+**semantic algorithm**.
+
+You can invoke a skill on its own, but the larger design is for modern agent
+harnesses such as Codex, Claude Code, pi, and Cursor—any host that can launch
+fresh subagents without inherited context. In those environments, `sem-run`
+acts as a meta-program: it turns a request into an inspectable computation
+graph, lets the harness orchestrate one subagent per semantic operation, and
+returns the whole run as linked Markdown.
 
 ## Install
 
@@ -35,7 +46,53 @@ List the available skills without installing them:
 npx skills add kousun12/semantic-algos --list
 ```
 
-## Use
+## Getting started
+
+After installing the full pack, ask `sem-run` for the exploration you want in
+ordinary language:
+
+```text
+$sem-run Let's explore how meaning becomes attached to work. Get to the bottom of it, test the deepest assumptions, then embody the tension in a short allegory.
+```
+
+You do not have to choose the operators. `sem-run` first compiles the
+request into a readable Sem program. One valid compilation might have this
+shape:
+
+```mermaid
+flowchart LR
+  request["How does work acquire meaning?"] --> forge["question-forge"]
+  forge --> whys["n-whys"]
+  whys --> audit["assumption-audit"]
+  audit --> story["parable"]
+  story --> result["final.md"]
+```
+
+Each operator runs in a fresh subagent and leaves a standalone Markdown result
+for the next one. The exact compilation may vary—the program is interpretable
+prose, not parser input—but its application boundaries and dataflow remain
+visible.
+
+When the run finishes, `sem-run` reports a directory like:
+
+```text
+sem-runs/meaning-and-work/<timestamp>/
+  program.md
+  interpretation.md
+  run.md
+  applications/
+    001-question-forge/
+    002-n-whys/
+    003-assumption-audit/
+    004-parable/
+  final.md
+```
+
+Open `final.md` for the returned allegory and a complete linked trace of how it
+was produced. Because the state lives in files, a run can also be inspected or
+resumed without relying on conversational memory.
+
+## Use a single skill
 
 Invoke a skill by name and give it a question. The best inputs often sound almost too simple to need a method:
 
@@ -137,56 +194,6 @@ library rather than acting as ordinary semantic functions inside a program.
 | [`sem-compile`](skills/sem-compile) | Compile natural language, a loose pipeline, or an existing `program.md` into a readable Sem program and compile notes, without running or answering it. |
 | [`sem-run`](skills/sem-run) | Compile when needed, interpret the program, run every semantic application in a fresh subagent, and return a linked Markdown trace. |
 
-The one-line entry point is natural language; no fidelity or syntax mode is
-required:
-
-```text
-$sem-run thinking about leaving my job, it's a drag, i get paid a lot and am respected but it is soul crushing - tell me a story like kafka would tell it, then a song like bob dylan would write it, and finally a joke like norm macdonald would tell it
-```
-
-One valid compilation of that request is the following. It keeps the dilemma
-open, lowers the named styles to broad mechanisms instead of imitation, shares
-one upstream tension, and returns the three independent forms in the requested
-order:
-
-```haskell
-use [question-forge, parable, lyric, joke]
-
-local extractTension(input: { dilemma: Dilemma, question: ForgedQuestion })
-  -> CreativeBrief:
-  preserve high pay and respect versus drudgery and felt soul-loss
-  return one primary opposed pair and at most two supporting pairs
-  stop after one supported brief; do not advise staying or leaving
-
-leavingMyJob = do
-  dilemma =
-    { question = "Should I stay or leave?"
-    , gains = [highPay, respect]
-    , costs = [drudgery, lossOfSoul]
-    }
-
-  question <- questionForge dilemma
-  tension <- extractTension { dilemma = dilemma, question = question }
-
-  outputs <-
-    tension
-    >>> ( parable `with`
-            { mechanisms = [bureaucraticSurrealism, dreamLogic,
-                            helplessEscalation] }
-          &&& lyric `with`
-            { form = narrativeFolkBallad
-            , mechanisms = [recurringRefrain, propheticImagery,
-                            slantRhyme, moralAmbiguity] }
-          &&& joke `with`
-            { form = shortDeadpanShaggyDog
-            , mechanisms = [suspiciousLiteralism, delayedFrameShift,
-                            anticlimacticPunchline] }
-        )
-
-  hide [dilemma, question, tension]
-  pure outputs >>> order [Story, Song, Joke]
-```
-
 For compile-only work, invoke the compiler directly:
 
 ```text
@@ -201,7 +208,7 @@ not execute the program or answer the request.
 
 Each skill is an operator. Chained together, they become small semantic programs for curiosity, interpretation, decisions, and ordinary life.
 
-The Haskell-esque diagrams below are executable Sem conventions: pass one to
+The Haskell-esque programs below are executable Sem conventions: pass one to
 `sem-run` as a rough sketch or save it as `program.md`. Camel-cased names such
 as `questionForge` resolve to installed skills such as `question-forge`.
 Punctuation, indentation, type-like hints, and combinators help a language
@@ -218,7 +225,7 @@ desire =
   >>> nWhys `with` { depth = 7 }
 
 promise =
-  firstPrinciples "What makes a promise binding?"
+  firstPrinciplesThinking "What makes a promise binding?"
   >>> inversion `with` { focus = candidateRule }
 
 mouse =
@@ -307,9 +314,24 @@ For example, a program can branch into several interpretations and bring them ba
 ```haskell
 deepAnalysis =
   questionForge
-  >>> (firstPrinciples &&& inversion &&& analogyTransfer)
-  >>> synthesize
+  >>> (firstPrinciplesThinking &&& inversion &&& analogyTransfer)
+  >>> dpSolve `with` { objective = "synthesize the branch results" }
   >>> assumptionAudit
+```
+
+That program is a graph, not just a list. The three middle applications can run
+in parallel once `question-forge` succeeds; `dp-solve` waits for all three
+results before synthesizing them:
+
+```mermaid
+flowchart LR
+  forge["question-forge"] --> principles["first-principles-thinking"]
+  forge --> inversion["inversion"]
+  forge --> analogy["analogy-transfer"]
+  principles --> solve["dp-solve"]
+  inversion --> solve
+  analogy --> solve
+  solve --> audit["assumption-audit"]
 ```
 
 Haskell readers may recognize that these effectful, context-carrying steps are closer to Kleisli composition (`>=>`) than pure function composition (`.`). The public notation uses `>>>` because the left-to-right flow is easier to read.
