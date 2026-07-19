@@ -34,8 +34,8 @@ Follow this workflow:
 5. Launch each ready semantic application in its own fresh no-history
    subagent. Use one worker per standard-library call, local operator, mapped
    item, iteration, semantic predicate, selector, critic, or synthesizer. Give
-   it only the selected function contract, declared input results, local
-   configuration, and one assigned result path.
+   it only the selected function contract, declared run-local source copies or
+   upstream results, local configuration, and one assigned result path.
 6. Keep orchestration in the root runner: schedule ready applications, record
    state, expand dynamic constructs, continue independent branches after a
    failure, and preserve completed results during resume. Never perform a

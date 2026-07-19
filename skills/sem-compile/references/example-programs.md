@@ -35,9 +35,8 @@ leavingMyJob =
           }
 
       core =
-        dilemma
-        >>> questionForge
-        >>> extractTension
+        let question = dilemma >>> questionForge
+        in extractTension { dilemma = dilemma, question = question }
             -- local, one pass: return a CreativeBrief with the situation,
             -- forged question, one primary opposed pair, and at most two
             -- supporting pairs; preserve both sides and invent no facts
@@ -79,7 +78,7 @@ The compact pipeline contains five applications:
 | ID | Application | Input | Depends on | Result |
 | --- | --- | --- | --- | --- |
 | 1 | `question-forge` | `dilemma` | source | Forged question |
-| 2 | **local** `extractTension` | forged question | 1 | Creative brief |
+| 2 | **local** `extractTension` | dilemma and forged question | 1 | Creative brief |
 | 3 | `parable` | creative brief | 2 | Story |
 | 4 | `lyric` | creative brief | 2 | Song |
 | 5 | `joke` | creative brief | 2 | Joke |

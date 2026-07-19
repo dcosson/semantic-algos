@@ -96,7 +96,7 @@ For each static application record:
 - stable ordinal and readable binding name;
 - exact program excerpt;
 - standard-library slug and `SKILL.md` path, or complete local definition;
-- declared upstream artifacts in order;
+- declared run-local source or upstream artifacts, or literal values, in order;
 - local configuration;
 - expected standalone result and stopping rule;
 - dependencies and parallel group;
@@ -144,8 +144,9 @@ the program is explicitly meta-level.
 ## Schedule applications
 
 Write `run.md` with overall status and an application table before launching.
-An application is ready when every declared input result it needs is accepted
-and it is not blocked by a failed dependency.
+An application is ready when every declared run-local source exists, every
+upstream result it needs is accepted, and it is not blocked by a failed
+dependency.
 
 Launch independent ready applications concurrently up to the host's available
 subagent capacity while reserving the root runner. Assign every application ID
@@ -209,7 +210,8 @@ Give the worker only:
 - the application identity and the smallest exact excerpt that defines this
   application, without surrounding or downstream applications;
 - one selected repository contract or complete local definition;
-- declared upstream `## Result` values in order;
+- declared run-local source inputs or literal source values, plus upstream
+  `## Result` values in order;
 - local configuration, expected output, and stop rule;
 - its assigned `result.md` path and artifact contract.
 
@@ -226,11 +228,16 @@ interpretive changes and dynamically created applications rather than rewriting
 history.
 
 Accept a result only when it exists, is non-empty, contains a `## Result`
-section, and follows any explicit output shape. Do not silently edit semantic
-content. Mark malformed or missing output as a mechanical failure. If a worker
-wrote malformed content to the canonical `result.md`, move it unchanged to the
-next numbered `attempts/*-failure.md` before retry or finalization; the root
-`result.md` path belongs only to the first accepted result.
+section, follows any explicit output shape, and contains semantic output rather
+than an explicit refusal or failure report. Do not silently edit semantic
+content. When a worker reports a declared semantic precondition failure or a
+material function-contract/configuration conflict, leave the canonical
+`result.md` absent, record the report in status, and mark the application
+Failed without automatic retry. Mark an unexplained malformed or missing
+output as a mechanical failure. If a worker wrote malformed content or failure
+prose to the canonical `result.md`, move it unchanged to the next numbered
+`attempts/*-failure.md` before retry or finalization; the root `result.md` path
+belongs only to the first accepted result.
 
 Retry once for a mechanical failure with a new recorded prompt/attempt. Do not
 repeatedly retry a refusal, unsupported operator, exhausted stopping condition,

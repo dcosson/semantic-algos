@@ -119,8 +119,8 @@ order. Assign all members of a concurrent batch before spawning them.
 Each application directory contains:
 
 - `prompt.md`: exact no-history worker prompt and declared read list;
-- `result.md`: the first accepted standalone semantic result, immutable after
-  success;
+- `result.md`: only for a Succeeded application, the first accepted standalone
+  semantic result, immutable after success;
 - `status.md`: current status plus append-only attempt notes.
 
 A worker writes only its assigned result. The root writes status and scheduling
@@ -163,7 +163,8 @@ artifact index. Visibility controls presentation, not trace retention.
 Use these application states in `status.md` and `run.md`:
 
 - **Pending:** known but missing an accepted dependency;
-- **Ready:** all declared inputs are accepted;
+- **Ready:** all declared source inputs are available and all upstream result
+  dependencies are accepted;
 - **Running:** assigned to a fresh worker;
 - **Succeeded:** `result.md` was accepted and is immutable;
 - **Failed:** the application reached a terminal failure;
