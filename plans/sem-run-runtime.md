@@ -693,7 +693,7 @@ Use a hidden sentinel in an undeclared sibling file for the isolation evaluation
 
 ## Phase 4: Build evaluations and forward-test the pair
 
-- **Status:** Not started
+- **Status:** Done
 - **Depends on:** Phase 3
 - **Objective:** Establish behavioral confidence that independent agents can compile and execute Sem consistently without a parser or hidden expected syntax.
 - **Scope:** `evals/sem/*.md` and bounded general improvements to `skills/sem-compile/` and `skills/sem-run/` revealed by evaluation.
@@ -778,3 +778,12 @@ The intended system is smaller and stranger: a shared notation, a repository of 
 - **Commit:** `dee080d` (`Implement Sem runtime workflow`).
 - **Deviations:** Multiple delegated implementation drafts stalled after scaffolding, so the root integrated the documented runtime contract directly and then required an independent review-and-fix pass before commit. Product scope did not change.
 - **Remaining risks:** Context isolation is enforced through fresh no-history agents; filesystem read isolation remains behavioral unless the host supplies a sandbox. External packaging validation remains unavailable.
+
+### 2026-07-19 — Phase 4: Build evaluations and forward-test the pair
+
+- **Summary:** Added seven prose-first behavioral evaluations and executed each as a black-box `sem-run` request in a clean temporary workspace. The cases cover loose composition, terse natural language, a local operator, bounded semantic iteration and route choice, prompt-scope isolation, partial fan-out failure, and the motivating Story/Song/Joke program.
+- **Validation:** All seven runs produced reconstructable Markdown traces. Corrected reruns used exactly two applications for isolation, ten for the three-round bounded spiral, three for the partial-failure fan-out, and five for the motivating named-style program. The hidden sibling marker remained absent, the unchosen route did not run, the failed approval branch produced no result or retry, and the named-style run returned Story, Song, then Joke. A fresh evaluator reconstructed every run using only its output directory and found no broken links or material ambiguity. Both external skill validators, the Markdown/YAML-only inventory, and `git diff --check` passed.
+- **Review:** Independent phase review found that the initial compiler guidance permitted unnecessary input-shaping, claim-extraction, and presentation workers. The reusable fix makes application count part of program meaning, elides adapters only when the selected contract already owns the interpretation, respects explicit expansion budgets, and leaves status narration to finalization. The corrected isolation, iteration, and partial-failure cases were rerun successfully. No unresolved findings.
+- **Commit:** `3cf7a43` (`Add Sem behavioral evaluations`).
+- **Deviations:** The first isolation, bounded-iteration, and partial-failure compilations exposed over-eager adapter applications. Those traces were retained for diagnosis, the contract was fixed generally rather than with test-specific programs, and clean corrected runs supplied the acceptance evidence.
+- **Remaining risks:** Fresh-agent isolation is behavioral rather than OS-enforced when the host shares a filesystem; the sentinel case verifies prompt discipline but cannot prove a sandbox boundary.
