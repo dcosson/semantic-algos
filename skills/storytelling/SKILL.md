@@ -14,14 +14,14 @@ Use this skill when the user invokes `storytelling`, asks for a story or storybo
 Preferred form:
 
 ```text
-storytelling q=<subject> audience=<who, specifically> form=<target form> goal=<delight|explain|persuade|move>
+storytelling q=<subject> audience=<who, specifically> form=<target form>
 ```
 
 Examples:
 
 ```text
 storytelling q=A hedgehog who is afraid of the dark audience=four-year-old at bedtime form=children's story
-storytelling q=Why our data team should exist audience=seed-stage investors form=pitch storyboard goal=move
+storytelling q=Why our data team should exist audience=seed-stage investors form=pitch storyboard
 storytelling q=How we survived the monolith migration audience=engineering conference form=20-minute talk
 storytelling q=Grandpa's unrepaired watch audience=adult readers form=short story
 ```
@@ -29,7 +29,12 @@ storytelling q=Grandpa's unrepaired watch audience=adult readers form=short stor
 - `q`: required subject — a topic, question, product, event, memory, claim, or plan.
 - `audience`: who will receive the story. If missing, infer a specific audience and state the inference; never write for a generic one.
 - `form`: the delivery. If missing, default to storyboard plus rendered prose.
-- `goal`: what the story is for. If missing, infer from form and say so.
+
+The communicative goal — delight, explain, persuade, move to action — is not an
+argument. The skill infers it from audience and form and declares it in the
+Frame, where a wrong inference is visible; override it in plain language when
+the default reading is wrong ("this migration talk should win budget, not just
+share lessons").
 
 ## Purpose
 
@@ -52,7 +57,7 @@ Six beats, in order. Every story covers all six; forms differ only in costume.
 
 ## Procedure
 
-1. **Frame.** Fix audience, goal, form — and the protagonist. A topic is not a protagonist; find the person inside the subject. In persuasion forms the protagonist is the audience or their customer, never the presenter.
+1. **Frame.** Fix audience and form, infer the goal (delight, explain, persuade, move) from them and declare it — and identify the protagonist. A topic is not a protagonist; find the person inside the subject. In persuasion forms the protagonist is the audience or their customer, never the presenter.
 2. **Model the audience.** What they already know, want, and fear; their vocabulary ceiling; what counts as proof to them; how much peril they can hold. Every later choice answers to this model.
 3. **Distill the change.** One sentence: *from X to Y*. This is the state change the whole story exists to make. If no state changes, there is no story yet — return to the subject and find the change.
 4. **Beat out the arc.** One or two lines per beat, all six, before any panels. The arc is the load-bearing structure; panels only furnish it.
@@ -106,7 +111,7 @@ Pairs naturally upstream with `question-forge` (find the question worth telling 
 ```haskell
 pitch =
   assumptionAudit "Our onboarding is why customers churn"
-  >>> storytelling `with` { audience = "exec team", form = "pitch storyboard", goal = "move" }
+  >>> storytelling `with` { audience = "exec team", form = "pitch storyboard" }
 
 bedtime =
   questionForge "Why is it brave to try again?"
