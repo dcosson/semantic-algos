@@ -186,6 +186,7 @@ library rather than acting as ordinary semantic functions inside a program.
 | [`parable`](skills/parable) | Compile a question into a short story that embodies the tension without stating or settling it. |
 | [`lyric`](skills/lyric) | Compile a question into a poem or song whose voice, images, sound, and recurrence embody the tension. |
 | [`joke`](skills/joke) | Compile a topic into a setup and punchline that switch between two compatible frames. |
+| [`storytelling`](skills/storytelling) | Storyboard a subject as an audience-calibrated arc — equilibrium to new equilibrium — then render it as a story, talk, or the narrative spine of a pitch deck. |
 
 ## Language tooling
 
