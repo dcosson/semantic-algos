@@ -1,0 +1,4 @@
+interface:
+  display_name: "Narrative Arc"
+  short_description: "Storyboard any subject as an audience-calibrated arc of tension and resolution"
+  default_prompt: "Use $narrative-arc to give this subject narrative shape — introduce its tension, storyboard the arc for its audience, then render the target form."

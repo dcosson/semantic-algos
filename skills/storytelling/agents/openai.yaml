@@ -1,4 +1,0 @@
-interface:
-  display_name: "Storytelling"
-  short_description: "Storyboard any subject as an audience-calibrated narrative arc"
-  default_prompt: "Use $storytelling to give this subject narrative shape — storyboard it for its audience, then render the target form."
